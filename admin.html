@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - CLERK CLUB</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a1a;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: white;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #6a1b9a, #8e24aa);
+            padding: 20px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #ffd700;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .card {
+            background: #1a1a2e;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid #333;
+        }
+
+        .card h2 {
+            margin-bottom: 20px;
+            color: #ffd700;
+            font-size: 20px;
+        }
+
+        .card h3 {
+            margin-bottom: 15px;
+            color: #aaa;
+            font-size: 16px;
+        }
+
+        .result-setter {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .number-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .num-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            background: #0d0d2a;
+            border: 2px solid #333;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .num-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .num-btn.green {
+            background: #2e7d32;
+            border-color: #4caf50;
+        }
+
+        .num-btn.red {
+            background: #c62828;
+            border-color: #ef5350;
+        }
+
+        .num-btn.violet {
+            background: #6a1b9a;
+            border-color: #9c27b0;
+        }
+
+        input, select {
+            padding: 12px;
+            background: #0d0d2a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #6a1b9a, #8e24aa);
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+
+        th {
+            color: #ffd700;
+        }
+
+        .status-processing {
+            color: #ff9800;
+        }
+
+        .status-won {
+            color: #4caf50;
+        }
+
+        .status-lost {
+            color: #f44336;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .success {
+            color: #4caf50;
+            margin-top: 10px;
+        }
+
+        .error {
+            color: #f44336;
+            margin-top: 10px;
+        }
+
+        .preview {
+            margin-top: 20px;
+            padding: 15px;
+            background: #0d0d2a;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .preview-number {
+            font-size: 64px;
+            font-weight: bold;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">CLERK <span>CLUB</span> <small style="font-size:12px;">Admin Panel</small></div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+
+        <!-- Set Result Section -->
+        <div class="card">
+            <h2>🎲 Set Next Wingo Result</h2>
+            <div class="result-setter">
+                <div class="number-buttons" id="numberButtons"></div>
+            </div>
+            <div class="preview" id="preview">
+                <div class="preview-number">-</div>
+                <div id="previewDetails">Select a number above</div>
+            </div>
+            <div id="setResultMessage"></div>
+        </div>
+
+        <div class="grid-2">
+            <!-- Add Funds Section -->
+            <div class="card">
+                <h2>💰 Add Funds (User DM'd on Telegram)</h2>
+                <input type="text" id="addUserId" placeholder="User ID or Username" style="width:100%; margin-bottom:10px;">
+                <input type="number" id="addAmount" placeholder="Amount in ₹" style="width:100%; margin-bottom:10px;">
+                <button onclick="addFunds()">Add Funds</button>
+                <div id="addFundsMessage"></div>
+                <div style="margin-top:15px; padding:10px; background:#0d0d2a; border-radius:8px;">
+                    <small>📞 Telegram: @clerkmm</small>
+                </div>
+            </div>
+
+            <!-- Search User Section -->
+            <div class="card">
+                <h2>🔍 Search User</h2>
+                <div class="search-box">
+                    <input type="text" id="searchUser" placeholder="Username or Phone" style="flex:1;">
+                    <button onclick="searchUser()">Search</button>
+                </div>
+                <div id="userInfo"></div>
+            </div>
+        </div>
+
+        <!-- Withdrawal Requests -->
+        <div class="card">
+            <h2>💸 Withdrawal Requests (Fake - Always Processing)</h2>
+            <div style="overflow-x: auto;">
+                <table id="withdrawalsTable">
+                    <thead>
+                        <tr><th>User</th><th>Amount (₹)</th><th>UPI ID</th><th>Status</th><th>Requested At</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="5">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Recent Bets -->
+        <div class="card">
+            <h2>📊 Recent Bets</h2>
+            <div style="overflow-x: auto;">
+                <table id="betsTable">
+                    <thead>
+                        <tr><th>User</th><th>Amount (₹)</th><th>Predicted</th><th>Win Amount (₹)</th><th>Status</th><th>Time</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="6">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check admin session
+        async function checkAdmin() {
+            const response = await fetch('/api/admin/check');
+            const data = await response.json();
+            if (!data.isAdmin) {
+                window.location.href = '/login.html';
+            }
+        }
+        checkAdmin();
+
+        // Generate number buttons 0-9
+        const numberButtons = document.getElementById('numberButtons');
+        for (let i = 0; i <= 9; i++) {
+            const btn = document.createElement('button');
+            btn.className = 'num-btn';
+            btn.innerText = i;
+            
+            // Set color based on number
+            if ([1, 3, 7, 9].includes(i)) {
+                btn.classList.add('green');
+            } else if ([2, 4, 6, 8].includes(i)) {
+                btn.classList.add('red');
+            } else {
+                btn.classList.add('violet');
+            }
+            
+            btn.onclick = () => selectNumber(i);
+            numberButtons.appendChild(btn);
+        }
+
+        let selectedNumber = null;
+
+        function selectNumber(num) {
+            selectedNumber = num;
+            
+            let color = '';
+            if ([1, 3, 7, 9].includes(num)) color = 'Green';
+            else if ([2, 4, 6, 8].includes(num)) color = 'Red';
+            else color = 'Violet';
+            
+            const bigSmall = num >= 5 ? 'Big' : 'Small';
+            
+            document.getElementById('preview').innerHTML = `
+                <div class="preview-number" style="color: ${color === 'Green' ? '#4caf50' : color === 'Red' ? '#f44336' : '#9c27b0'}">${num}</div>
+                <div id="previewDetails">${color} | ${bigSmall}</div>
+            `;
+        }
+
+        async function setResult() {
+            if (selectedNumber === null) {
+                document.getElementById('setResultMessage').innerHTML = '<div class="error">Please select a number first</div>';
+                return;
+            }
+
+            const response = await fetch('/api/admin/set-result', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ winning_number: selectedNumber })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                document.getElementById('setResultMessage').innerHTML = '<div class="success">✓ Result set successfully! Next period will show this number.</div>';
+                selectedNumber = null;
+                document.getElementById('preview').innerHTML = '<div class="preview-number">-</div><div id="previewDetails">Select a number above</div>';
+            } else {
+                document.getElementById('setResultMessage').innerHTML = '<div class="error">❌ ' + result.message + '</div>';
+            }
+        }
+
+        async function addFunds() {
+            const userId = document.getElementById('addUserId').value;
+            const amount = document.getElementById('addAmount').value;
+
+            if (!userId || !amount) {
+                document.getElementById('addFundsMessage').innerHTML = '<div class="error">Please enter User ID and Amount</div>';
+                return;
+            }
+
+            const response = await fetch('/api/admin/add-funds', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId, amount: parseInt(amount) })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                document.getElementById('addFundsMessage').innerHTML = '<div class="success">✓ ' + result.message + '</div>';
+                document.getElementById('addUserId').value = '';
+                document.getElementById('addAmount').value = '';
+            } else {
+                document.getElementById('addFundsMessage').innerHTML = '<div class="error">❌ ' + result.message + '</div>';
+            }
+        }
+
+        async function searchUser() {
+            const search = document.getElementById('searchUser').value;
+            if (!search) return;
+
+            const response = await fetch(`/api/admin/user?search=${encodeURIComponent(search)}`);
+            const user = await response.json();
+
+            if (user.error) {
+                document.getElementById('userInfo').innerHTML = '<div class="error">User not found</div>';
+                return;
+            }
+
+            document.getElementById('userInfo').innerHTML = `
+                <div style="background:#0d0d2a; padding:15px; border-radius:10px;">
+                    <p><strong>Username:</strong> ${user.username}</p>
+                    <p><strong>Phone:</strong> ${user.phone || 'Not set'}</p>
+                    <p><strong>Balance:</strong> <span style="color:#ffd700; font-size:20px;">₹${user.virtual_balance}</span></p>
+                    <p><strong>Total Bet:</strong> ₹${user.total_bet}</p>
+                    <p><strong>Total Win:</strong> ₹${user.total_win}</p>
+                    <p><strong>Joined:</strong> ${new Date(user.created_at).toLocaleString()}</p>
+                </div>
+            `;
+        }
+
+        async function loadWithdrawals() {
+            const response = await fetch('/api/admin/withdrawals');
+            const withdrawals = await response.json();
+            const tbody = document.querySelector('#withdrawalsTable tbody');
+            
+            if (withdrawals.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5">No withdrawal requests</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = withdrawals.map(w => `
+                <tr>
+                    <td>${w.username}</td>
+                    <td>₹${w.amount}</td>
+                    <td>${w.upi_id || 'N/A'}</td>
+                    <td class="status-processing">${w.status}</td>
+                    <td>${new Date(w.requested_at).toLocaleString()}</td>
+                </tr>
+            `).join('');
+        }
+
+        async function loadBets() {
+            const response = await fetch('/api/admin/bets');
+            const bets = await response.json();
+            const tbody = document.querySelector('#betsTable tbody');
+            
+            if (bets.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6">No bets placed yet</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = bets.map(b => `
+                <tr>
+                    <td>${b.username}</td>
+                    <td>₹${b.amount}</td>
+                    <td>${b.predicted_number !== null ? b.predicted_number : '-'}</td>
+                    <td>${b.win_amount > 0 ? '₹' + b.win_amount : '-'}</td>
+                    <td class="${b.status === 'won' ? 'status-won' : b.status === 'lost' ? 'status-lost' : ''}">${b.status}</td>
+                    <td>${new Date(b.placed_at).toLocaleTimeString()}</td>
+                </tr>
+            `).join('');
+        }
+
+        async function logout() {
+            await fetch('/api/admin/logout', { method: 'POST' });
+            window.location.href = '/login.html';
+        }
+
+        // Auto-refresh data every 5 seconds
+        setInterval(() => {
+            loadWithdrawals();
+            loadBets();
+        }, 5000);
+
+        loadWithdrawals();
+        loadBets();
+
+        // Add Set Result button below preview
+        const setButton = document.createElement('button');
+        setButton.innerText = 'Set Result for Next Period';
+        setButton.style.marginTop = '15px';
+        setButton.onclick = setResult;
+        document.getElementById('preview').parentElement.appendChild(setButton);
+    </script>
+</body>
+</html>
