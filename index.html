@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>CLERK CLUB - Wingo 1M</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a2a 0%, #1a0a2e 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Poppins', Arial, sans-serif;
+            color: white;
+            min-height: 100vh;
+            padding-bottom: 100px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #6a1b9a, #8e24aa);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #ffd700;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Balance Card */
+        .balance-card {
+            background: linear-gradient(135deg, #1a1a3a, #0d0d2a);
+            margin: 15px;
+            padding: 15px 20px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .balance-label {
+            font-size: 13px;
+            color: #aaa;
+        }
+
+        .balance-amount {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .balance-amount span {
+            font-size: 14px;
+        }
+
+        /* Period Card */
+        .period-card {
+            background: rgba(0,0,0,0.4);
+            margin: 15px;
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .period-id {
+            font-size: 12px;
+            color: #ffd700;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .timer {
+            font-size: 56px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            color: #ff6b6b;
+            text-shadow: 0 0 15px rgba(255,107,107,0.4);
+            letter-spacing: 5px;
+        }
+
+        .timer-label {
+            font-size: 11px;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        /* Last Result */
+        .last-result {
+            background: linear-gradient(135deg, #1a1a3a, #0d0d2a);
+            margin: 15px;
+            padding: 15px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .last-result-title {
+            font-size: 12px;
+            color: #aaa;
+            margin-bottom: 10px;
+        }
+
+        .result-number {
+            font-size: 70px;
+            font-weight: bold;
+            display: inline-block;
+            width: 110px;
+            height: 110px;
+            line-height: 110px;
+            text-align: center;
+            border-radius: 50%;
+            margin: 0 auto;
+        }
+
+        .result-details {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        /* Betting Section */
+        .bet-section {
+            background: #1a1a2e;
+            margin: 15px;
+            padding: 20px;
+            border-radius: 20px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            color: #ffd700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .numbers-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .number-btn {
+            background: #0d0d2a;
+            border: 2px solid #333;
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .number-btn.selected {
+            border-color: #ffd700;
+            background: #ffd70020;
+            transform: scale(1.02);
+        }
+
+        .number-btn.green {
+            border-color: #4caf50;
+        }
+        .number-btn.red {
+            border-color: #f44336;
+        }
+        .number-btn.violet {
+            border-color: #9c27b0;
+        }
+
+        /* Amount Input */
+        .amount-section {
+            margin: 20px 0;
+        }
+
+        .amount-label {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 8px;
+        }
+
+        .amount-input {
+            width: 100%;
+            padding: 15px;
+            background: #0d0d2a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .quick-amounts {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .quick-btn {
+            flex: 1;
+            background: #0d0d2a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 8px;
+            color: #ffd700;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        /* Place Bet Button */
+        .place-bet-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #6a1b9a, #8e24aa);
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+
+        .place-bet-btn:active {
+            transform: scale(0.98);
+        }
+
+        .place-bet-btn:disabled {
+            opacity: 0.5;
+            transform: none;
+        }
+
+        /* Withdraw Button */
+        .withdraw-btn {
+            background: linear-gradient(135deg, #e94560, #c62828);
+            border: none;
+            border-radius: 30px;
+            padding: 14px 25px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 15px;
+            width: calc(100% - 30px);
+        }
+
+        /* Telegram Notice */
+        .telegram-notice {
+            background: #0088cc20;
+            margin: 15px;
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #0088cc;
+            font-size: 13px;
+        }
+
+        .telegram-notice a {
+            color: #0088cc;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* Side Menu (Hidden by default) */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 260px;
+            height: 100%;
+            background: #1a1a2e;
+            z-index: 1000;
+            transition: left 0.3s;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+        }
+
+        .side-menu.open {
+            left: 0;
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
+            display: none;
+        }
+
+        .menu-overlay.open {
+            display: block;
+        }
+
+        .menu-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #333;
+            cursor: pointer;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Toast Message */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: #333;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 1001;
+            display: none;
+        }
+
+        .toast.success {
+            background: #2e7d32;
+        }
+
+        .toast.error {
+            background: #c62828;
+        }
+
+        .toast.show {
+            display: block;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Side Menu -->
+    <div class="side-menu" id="sideMenu">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 28px; font-weight: bold;">CLERK<span style="color:#ffd700;">CLUB</span></div>
+        </div>
+        <div class="menu-item" onclick="showWithdrawModal()">💸 Withdraw</div>
+        <div class="menu-item" onclick="showRules()">📜 Game Rules</div>
+        <div class="menu-item" onclick="window.location.reload()">🔄 Refresh</div>
+        <div class="menu-item" style="color:#888;">📞 @clerkmm</div>
+    </div>
+    <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="menu-icon" onclick="openMenu()">☰</div>
+        <div class="logo">CLERK <span>CLUB</span></div>
+        <div style="width: 30px;"></div>
+    </div>
+
+    <!-- Balance -->
+    <div class="balance-card">
+        <div>
+            <div class="balance-label">Available Balance</div>
+            <div class="balance-amount">₹<span id="balance">0</span></div>
+        </div>
+        <div style="background:#ffd70020; padding:8px 12px; border-radius:20px; font-size:12px;">
+            Bonus: ₹100 Free
+        </div>
+    </div>
+
+    <!-- Game Period -->
+    <div class="period-card">
+        <div class="period-id" id="periodId">WGO-1M-001</div>
+        <div class="timer" id="timer">01:00</div>
+        <div class="timer-label">Time remaining to place bet</div>
+    </div>
+
+    <!-- Last Result -->
+    <div class="last-result">
+        <div class="last-result-title">Last Result</div>
+        <div id="lastResult">
+            <div class="result-number" style="background:#333;">-</div>
+            <div class="result-details">Waiting for result</div>
+        </div>
+    </div>
+
+    <!-- Betting Section -->
+    <div class="bet-section">
+        <div class="section-title">
+            🎯 Select Number (0-9)
+        </div>
+        <div class="numbers-grid" id="numbersGrid"></div>
+
+        <div class="amount-section">
+            <div class="amount-label">💰 Enter Amount (₹)</div>
+            <input type="number" id="betAmount" class="amount-input" placeholder="Enter amount" value="10">
+            <div class="quick-amounts">
+                <div class="quick-btn" onclick="setAmount(10)">₹10</div>
+                <div class="quick-btn" onclick="setAmount(20)">₹20</div>
+                <div class="quick-btn" onclick="setAmount(50)">₹50</div>
+                <div class="quick-btn" onclick="setAmount(100)">₹100</div>
+            </div>
+        </div>
+
+        <button class="place-bet-btn" id="placeBetBtn" onclick="placeBet()">🚀 PLACE BET</button>
+    </div>
+
+    <button class="withdraw-btn" onclick="showWithdrawModal()">💸 WITHDRAW</button>
+
+    <div class="telegram-notice">
+        ⚠️ Out of balance? DM on Telegram: <a href="#">@clerkmm</a> to get funds added
+    </div>
+
+    <!-- Withdraw Modal -->
+    <div id="withdrawModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; justify-content:center; align-items:center;">
+        <div style="background:#1a1a2e; padding:25px; border-radius:20px; width:90%; max-width:350px;">
+            <h3 style="margin-bottom:15px;">Withdraw Funds</h3>
+            <input type="text" id="withdrawUpi" placeholder="Enter UPI ID (e.g., name@okhdfcbank)" style="width:100%; padding:12px; background:#0d0d2a; border:1px solid #333; border-radius:10px; color:white; margin-bottom:15px;">
+            <input type="number" id="withdrawAmount" placeholder="Amount (Min ₹110)" style="width:100%; padding:12px; background:#0d0d2a; border:1px solid #333; border-radius:10px; color:white; margin-bottom:20px;">
+            <button onclick="requestWithdraw()" style="width:100%; padding:12px; background:#e94560; border:none; border-radius:10px; color:white; font-weight:bold;">Submit Request</button>
+            <button onclick="closeWithdrawModal()" style="width:100%; padding:10px; background:#333; border:none; border-radius:10px; color:white; margin-top:10px;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let currentBalance = 100;
+        let selectedNumber = null;
+        let currentPeriodId = 'WGO-1M-001';
+        let timerInterval = null;
+        let userId = null;
+
+        // Generate number buttons
+        const numbersGrid = document.getElementById('numbersGrid');
+        for (let i = 0; i <= 9; i++) {
+            const btn = document.createElement('div');
+            btn.className = 'number-btn';
+            btn.innerText = i;
+            
+            // Set color
+            if ([1, 3, 7, 9].includes(i)) {
+                btn.classList.add('green');
+            } else if ([2, 4, 6, 8].includes(i)) {
+                btn.classList.add('red');
+            } else {
+                btn.classList.add('violet');
+            }
+            
+            btn.onclick = () => {
+                document.querySelectorAll('.number-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                selectedNumber = i;
+            };
+            numbersGrid.appendChild(btn);
+        }
+
+        function setAmount(amount) {
+            document.getElementById('betAmount').value = amount;
+        }
+
+        function showToast(message, isSuccess = true) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.className = 'toast ' + (isSuccess ? 'success' : 'error') + ' show';
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function openMenu() {
+            document.getElementById('sideMenu').classList.add('open');
+            document.getElementById('menuOverlay').classList.add('open');
+        }
+
+        function closeMenu() {
+            document.getElementById('sideMenu').classList.remove('open');
+            document.getElementById('menuOverlay').classList.remove('open');
+        }
+
+        function showWithdrawModal() {
+            document.getElementById('withdrawModal').style.display = 'flex';
+            closeMenu();
+        }
+
+        function closeWithdrawModal() {
+            document.getElementById('withdrawModal').style.display = 'none';
+        }
+
+        function showRules() {
+            alert('📜 CLERK CLUB Rules:\n\n• Each user gets ₹100 free bonus\n• Minimum withdrawal: ₹110\n• Withdrawals take 10-20 minutes\n• Out of balance? DM @clerkmm\n• Results are fair and random');
+            closeMenu();
+        }
+
+        async function requestWithdraw() {
+            const upiId = document.getElementById('withdrawUpi').value;
+            const amount = parseInt(document.getElementById('withdrawAmount').value);
+
+            if (!upiId) {
+                showToast('Please enter UPI ID', false);
+                return;
+            }
+
+            if (amount < 110) {
+                showToast('Minimum withdrawal is ₹110', false);
+                return;
+            }
+
+            if (amount > currentBalance) {
+                showToast('Insufficient balance', false);
+                return;
+            }
+
+            const response = await fetch('/api/withdraw', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ upi_id: upiId, amount: amount })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                showToast('Withdrawal request submitted! Status: Processing (10-20 mins)');
+                closeWithdrawModal();
+                document.getElementById('withdrawUpi').value = '';
+                document.getElementById('withdrawAmount').value = '';
+            } else {
+                showToast(result.message || 'Withdrawal failed', false);
+            }
+        }
+
+        async function placeBet() {
+            const amount = parseInt(document.getElementById('betAmount').value);
+            
+            if (!selectedNumber) {
+                showToast('Please select a number first', false);
+                return;
+            }
+
+            if (isNaN(amount) || amount <= 0) {
+                showToast('Please enter a valid amount', false);
+                return;
+            }
+
+            if (amount > currentBalance) {
+                showToast('Insufficient balance! DM @clerkmm on Telegram to add funds', false);
+                return;
+            }
+
+            const response = await fetch('/api/bet', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    number: selectedNumber,
+                    amount: amount
+                })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                currentBalance = result.balance;
+                document.getElementById('balance').innerText = currentBalance;
+                showToast(`✓ Bet placed on ${selectedNumber} for ₹${amount}`);
+                selectedNumber = null;
+                document.querySelectorAll('.number-btn').forEach(b => b.classList.remove('selected'));
+                document.getElementById('betAmount').value = '10';
+            } else {
+                showToast(result.message || 'Failed to place bet', false);
+            }
+        }
+
+        async function loadBalance() {
+            const response = await fetch('/api/user/balance');
+            const data = await response.json();
+            currentBalance = data.balance;
+            document.getElementById('balance').innerText = currentBalance;
+        }
+
+        async function loadGameStatus() {
+            const response = await fetch('/api/game/status');
+            const data = await response.json();
+            
+            document.getElementById('periodId').innerText = data.period_id;
+            document.getElementById('timer').innerText = data.timer;
+            currentPeriodId = data.period_id;
+            
+            if (data.last_result) {
+                let colorClass = '#333';
+                if (data.last_result.winning_color === 'Green') colorClass = '#4caf50';
+                else if (data.last_result.winning_color === 'Red') colorClass = '#f44336';
+                else if (data.last_result.winning_color === 'Violet') colorClass = '#9c27b0';
+                
+                document.getElementById('lastResult').innerHTML = `
+                    <div class="result-number" style="background:${colorClass}20; border:2px solid ${colorClass}; line-height:106px;">${data.last_result.winning_number}</div>
+                    <div class="result-details">${data.last_result.winning_color} | ${data.last_result.winning_big_small}</div>
+                `;
+            }
+        }
+
+        // Auto-refresh
+        setInterval(() => {
+            loadGameStatus();
+            loadBalance();
+        }, 1000);
+
+        loadBalance();
+        loadGameStatus();
+    </script>
+</body>
+</html>
